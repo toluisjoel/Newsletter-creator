@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     
     #local apps
     'news.apps.NewsConfig',
+    
+    # 3rd party apps
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
