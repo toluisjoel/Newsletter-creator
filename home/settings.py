@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     
     #local apps
     'news.apps.NewsConfig',
+    'users.apps.UsersConfig',
     
     # 3rd party apps
     'rest_framework',

@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Email
+
+class EmailAdmin(admin.ModelAdmin):
+    list_display = ['email', 'first_name', 'last_name', 'created_at']
+
+admin.site.register(Email, EmailAdmin)
