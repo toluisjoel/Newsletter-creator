@@ -5,6 +5,6 @@ from . import views
 router = SimpleRouter()
 
 router.register('news', views.PostViewset, basename='news')
-router.register('emails', views.EmailViewset, basename='email')
+router.register('emails', views.UserInfoViewset, basename='email')
 
 urlpatterns = router.urls

@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     #local apps
     'api.apps.ApiConfig',
     'news.apps.NewsConfig',
-    'users.apps.UsersConfig',
+    'emails.apps.EmailsConfig',
     
     # 3rd party apps
     'rest_framework',

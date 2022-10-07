@@ -5,10 +5,10 @@ from rest_framework import permissions
 
 from .serializers import (
     PostSerializer,
-    EmailSerializer,
+    UserInfoSerializer,
 )
 from news.models import Post
-from users.models import Email
+from emails.models import UserInfo
 
 
 class PostViewset(viewsets.ModelViewSet):
@@ -17,7 +17,6 @@ class PostViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
 
 
-class EmailViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    queryset = Email.objects.all()
-    serializer_class = EmailSerializer
-    permission_classes = [permissions.IsAdminUser]
+class UserInfoViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    queryset = UserInfo.objects.all()
+    serializer_class = UserInfoSerializer
