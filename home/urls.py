@@ -18,11 +18,11 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('news/', include('news.urls')),
-    path('users/', include('users.urls')),
+    # path('news/', include('news.urls')),
+    # path('users/', include('users.urls')),
     
     # API endpoints
-    # path('api/', include('api.urls')),
+    path('api/', include('api.urls')),
     
     # authentication and authorization
     path('api-auth/', include('rest_framework.urls')),
