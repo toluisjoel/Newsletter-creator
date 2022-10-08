@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from news.models import Post
-from emails.models import UserInfo
+from subscribers.models import Subscriber
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -14,9 +14,9 @@ class PostSerializer(serializers.ModelSerializer):
         ]
 
 
-class UserInfoSerializer(serializers.ModelSerializer):
+class SubscriberSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserInfo
+        model = Subscriber
         fields = [
             'id',
             'first_name',
