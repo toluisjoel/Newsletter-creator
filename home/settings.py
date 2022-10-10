@@ -119,6 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = 'uploaded_news/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -126,3 +127,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+FROM_EMAIL = env.str('FROM_EMAIL')
+SENDGRID_API_KEY = env.str('SENDGRID_API_KEY')
