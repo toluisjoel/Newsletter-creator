@@ -1,18 +1,20 @@
 import random
 
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.utils.encoding import force_bytes, force_str
 from django.utils.html import strip_tags
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-
-# from sendgrid import SendGridAPIClient
-# from sendgrid.helpers.mail import Mail
 
 from .forms import SubscribeForm
 from .models import Subscriber, Unsubscriber
+from .tokens import account_activation_token
 
 
 def otp_number():
@@ -38,30 +40,21 @@ def add_subscriber(request):
         except Unsubscriber.DoesNotExist:
             pass
         
-        confirmation_url = request.build_absolute_uri(reverse('subscribers:confirm')) + f'?email={subscriber.email}'
         email_context = {
             'subscriber': subscriber,
             'action': 'added',
-            'confirmation_url': confirmation_url,
+            'domain': get_current_site(request).domain,
+            'uid': urlsafe_base64_encode(force_bytes(subscriber.pk)),
+            'token': account_activation_token.make_token(subscriber),
+            'protocol': 'https' if request.is_secure() else 'http',
         }
         html_content = render_to_string('confirm_subscription.html', email_context)
         plain_text_content = strip_tags(html_content)
 
-        # message = Mail(
-        #     from_email=settings.FROM_EMAIL,
-        #     to_emails=subscriber.email,
-        #     subject='Subscription Confirmation',
-        #     plain_text_content=plain_text_content,
-        #     html_content=html_content,
-        # )
-
-        # send_grid = SendGridAPIClient(settings.SENDGRID_API_KEY)
-        # send_grid.send(message)
-
         send_mail(
             'Subscription Confirmation',
             plain_text_content,
-            settings.FROM_EMAIL,
+            settings.DEFAULT_FROM_EMAIL,
             [subscriber.email],
             html_message=html_content,
             fail_silently=False,
@@ -76,16 +69,21 @@ def add_subscriber(request):
     return render(request, 'index.html', {'form': SubscribeForm})
 
 
-def confirm_subscriber(request):
-    subscriber = Subscriber.objects.get(email=request.GET['email'])
+def confirm_subscriber(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        subscriber = Subscriber.objects.get(pk=uid)
+    except:
+        subscriber = None
 
-    if subscriber.otp_num == request.GET['otp_num']:
+    if (subscriber is not None) and (account_activation_token.check_token(subscriber, token)):
         subscriber.confirmed = True
         subscriber.save()
 
-        return render(request, 'index.html', {'email': subscriber.email, 'action': 'confirmed'})
-
-    return render(request, 'index.html', {'email': subscriber.email, 'action': 'denied'})
+    else:
+        return HttpResponse('There was an error confirming your email address')
+    
+    return redirect('subscribers:add')
 
 
 def unsubscribe(request):

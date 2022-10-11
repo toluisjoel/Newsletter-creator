@@ -126,6 +126,13 @@ MEDIA_URL = 'uploaded_news/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-FROM_EMAIL = env.str('FROM_EMAIL')
-SENDGRID_API_KEY = env.str('SENDGRID_API_KEY')
+
+EMAIL_BACKEND = env.str('EMAIL_BACKEND')
+EMAIL_HOST = env.str('EMAIL_HOST')
+MAILJET_API_KEY = env.str('MAILJET_API_KEY')
+MAILJET_API_SECRET = env.str('MAILJET_API_SECRET')
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL')
+EMAIL_TIMEOUT = env.int('EMAIL_TIMEOUT')
+DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
