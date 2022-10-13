@@ -1,30 +1,41 @@
 <!doctype html>
 <html>
-    <head>
-        <title> Email Newsletter </title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    </head>
-    <body>
-        <div class="container">
-            <div class="col-12">
-                <h1>Email Newsletter</h1>
-            </div>
-            <div class="col-12">
-                <!-- {% if email %} -->
-                <p>{{ email }} has been {{ action }}.</p>
-                <!-- {% endif %} -->
-            </div>
 
-            {% if form %}
-                <div class="col-12 col-md-4">
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-                        {{ form }}
-                        <br>
-                        <button type="submit" class="btn btn-success">Subscribe!</button>
-                    </form>
-                </div>
-            {% endif %}
+<head>
+    <title> The Humore </title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-12">
+            <h1>The Humore</h1>
         </div>
-    </body>
+
+        <!-- SUBSCRIPTION FORM -->
+        {% if form %}
+            <div class="col-12 col-md-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success"><b>Subscribe!</b></button>
+                </form>
+            </div>
+        {% endif %}
+
+        <!-- CONFIRM SUBSCRIPTION? -->
+        {% if action == 'subscribed' %}
+            <p>A connfirmation link has been sent to {{ subscriber.email }}</p>
+        {% endif %}
+
+        <!-- SUBSCRIPTION CONFIRMED -->
+        {% if action == 'confirmed' %}
+            <p>Thanks a bunch {{ subscriber.first_name }} 🥹</p>
+            <p>You just made our little family grow a little bigger</p>
+            <a href=""><button>See previous emails sent</button></a>
+        {% endif %}
+    </div>
+</body>
+
 </html>

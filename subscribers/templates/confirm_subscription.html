@@ -18,6 +18,5 @@ To confirm your subscription, please click on the link given below.
 If for some reason clicking <br> it doesn't work, copy and paste the link to your browser <br>
 </p>
 
-<h2><a href="http://{{ domain }}{% url 'subscribers:confirm' uidb64=uid token=token %}">subscription confirmation link</a></h2>
-
+<h2><a href="{{ protocol }}://{{ domain }}{% url 'subscribers:confirm' uidb64=uid token=token %}">subscription confirmation link</a></h2>
 {% endautoescape %}
