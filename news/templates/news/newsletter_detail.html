@@ -1,0 +1,9 @@
+<h1>
+    {{news.title}}
+</h1>
+{% for humore in news.posts.all %}
+    <h4>{{ forloop.counter }}. {{ humore.title }}</h4>
+    <pre>
+        {{ humore.content }}
+    </pre>
+{% endfor %}
