@@ -24,11 +24,6 @@
             </div>
         {% endif %}
 
-        <!-- CONFIRM SUBSCRIPTION? -->
-        {% if action == 'subscribed' %}
-            <p>A connfirmation link has been sent to {{ subscriber.email }}</p>
-        {% endif %}
-
         <!-- SUBSCRIPTION CONFIRMED -->
         {% if action == 'confirmed' %}
             <p>Thanks a bunch {{ subscriber.first_name }} 🥹</p>
