@@ -8,7 +8,7 @@ class Post(models.Model):
     )
     
     source = models.URLField(blank=True)
-    title = models.CharField(max_length=255)
+    title = models.CharField(unique=True, max_length=255)
     content = models.TextField()
     image = models.URLField(blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
@@ -19,6 +19,20 @@ class Post(models.Model):
     
     class Meta:
         ordering = ('created_at',)
+    
+    def __str__(self):
+        return self.title
+
+
+class NewsLetter(models.Model):
+    title = models.CharField(max_length=225)
+    posts = models.ManyToManyField(Post)
+    ready = models.BooleanField(default=False)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('-created_at',)
     
     def __str__(self):
         return self.title
