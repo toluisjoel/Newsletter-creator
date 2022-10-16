@@ -19,4 +19,5 @@ If for some reason clicking <br> it doesn't work, copy and paste the link to you
 </p>
 
 <h2><a href="{{ protocol }}://{{ domain }}{% url 'subscribers:confirm' uidb64=uid token=token %}">subscription confirmation link</a></h2>
+<h2><a href="{{ protocol }}://{{ domain }}{% url 'subscribers:unsubscribe' uidb64=uid token=token %}">Unsubscribe</a></h2>
 {% endautoescape %}
