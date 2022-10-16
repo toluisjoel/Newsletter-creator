@@ -1,23 +1,48 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
-from django.views import generic
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.encoding import force_bytes, force_str
+from django.utils.html import strip_tags
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from PIL import Image
+
+from utility.send_utility import send_confirmation_mail
 
 from .forms import SubscribeForm
 from .models import Subscriber, Unsubscriber
 from .tokens import account_activation_token
 
 
-class AddSubscriber(generic.CreateView):
-    form_class = SubscribeForm
-    template_name = 'index.html'
-    success_url = reverse_lazy('subscribers:complete')
-
-
-def complete_subscription(request):
-    return render(request, 'complete_subscription.html', {})
+def add_subscriber(request):
+    if request.method == 'POST':
+        form = SubscribeForm(request.POST)
+        if form.is_valid():
+            subscriber = form.save(commit=False)
+            form.save()
+            
+            # Send Confirmation Email
+            email_context = {
+                'subscriber': subscriber,
+                'action': 'added',
+                'domain': get_current_site(request).domain,
+                'uid': urlsafe_base64_encode(force_bytes(subscriber.pk)),
+                # 'image_url': request.build_absolute_uri(reverse("subscribers:image_load")),
+                'token': account_activation_token.make_token(subscriber),
+                'protocol': 'https' if request.is_secure() else 'http',
+            }
+            html_content = render_to_string('emails/confirm_subscription.html', email_context)
+            plain_text_content = strip_tags(html_content)
+            send_confirmation_mail(subscriber.email, plain_text_content, html_content)
+            
+            context = {
+                'subscriber': subscriber,
+            }
+            return render(request, 'complete_subscription.html', context)
+    else:
+        form = SubscribeForm()
+    return render(request, 'index.html', {'form': form})
 
 
 def confirm_subscriber(request, uidb64, token):
@@ -36,15 +61,42 @@ def confirm_subscriber(request, uidb64, token):
     return render(request, 'index.html', {'action': 'confirmed'})
 
 
-def unsubscribe(request):
-    subscriber = Subscriber.objects.get(email=request.GET['email'])
-    if subscriber.otp_num == request.GET['otp_num']:
+def unsubscribe(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        subscriber = Subscriber.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, Subscriber.DoesNotExist):
+        subscriber = None
+
+    if subscriber is not None and account_activation_token.check_token(subscriber, token):
         Unsubscriber.objects.create(
             first_name=subscriber.first_name,
             last_name=subscriber.last_name,
-            email=request.GET['email']
+            email=subscriber.email,
+            delivered_emails=subscriber.delivered_emails,
+            opened_emails=subscriber.opened_emails,
         )
         subscriber.delete()
-        return render(request, 'index.html', {'email': subscriber.email, 'action': 'unsubscribed'})
+    else:
+        return HttpResponse('You were wrong. psych!')
 
-    return render(request, 'index.html', {'email': subscriber.email, 'action': 'denied'})
+    return render(request, 'index.html', {'action': 'confirmed'})
+
+
+# For tracking if user opens emails
+def image_load(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        subscriber = Subscriber.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, Subscriber.DoesNotExist):
+        subscriber = None
+
+    if subscriber is not None and account_activation_token.check_token(subscriber, token):
+        subscriber.opened_emails += 1
+        subscriber.save()
+        red = Image.new('RGB', (1, 1))
+        response = HttpResponse(content_type="image/png")
+        red.save(response, "PNG")
+        return response
+    else:
+        return HttpResponse('You were wrong. psych!')
