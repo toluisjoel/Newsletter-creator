@@ -4,7 +4,7 @@ from . import views
 
 router = SimpleRouter()
 
-router.register('news', views.PostViewset, basename='news')
-router.register('subscribers', views.SubscriberViewset, basename='email')
+router.register('posts', views.PostViewset, basename='posts')
+router.register('subscribers', views.SubscriberViewset, basename='subscribers')
 
 urlpatterns = router.urls

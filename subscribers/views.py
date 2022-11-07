@@ -7,7 +7,6 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from PIL import Image
-
 from utility.send_utility import send_confirmation_mail
 
 from .forms import SubscribeForm
@@ -28,7 +27,6 @@ def add_subscriber(request):
                 'action': 'added',
                 'domain': get_current_site(request).domain,
                 'uid': urlsafe_base64_encode(force_bytes(subscriber.pk)),
-                # 'image_url': request.build_absolute_uri(reverse("subscribers:image_load")),
                 'token': account_activation_token.make_token(subscriber),
                 'protocol': 'https' if request.is_secure() else 'http',
             }
@@ -56,7 +54,7 @@ def confirm_subscriber(request, uidb64, token):
         subscriber.confirmed = True
         subscriber.save()
     else:
-        return HttpResponse('You were wrong. psych!')
+        return HttpResponse('Something went wrong, please try again')
 
     return render(request, 'index.html', {'action': 'confirmed'})
 
@@ -78,12 +76,12 @@ def unsubscribe(request, uidb64, token):
         )
         subscriber.delete()
     else:
-        return HttpResponse('You were wrong. psych!')
+        return HttpResponse('Could not unsubscribe you from the list')
 
     return render(request, 'index.html', {'action': 'confirmed'})
 
 
-# For tracking if user opens emails
+# For tracking if user opens email
 def image_load(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -95,8 +93,8 @@ def image_load(request, uidb64, token):
         subscriber.opened_emails += 1
         subscriber.save()
         red = Image.new('RGB', (1, 1))
-        response = HttpResponse(content_type="image/png")
-        red.save(response, "PNG")
+        response = HttpResponse(content_type='image/png')
+        red.save(response, 'PNG')
         return response
     else:
-        return HttpResponse('You were wrong. psych!')
+        return HttpResponse('Something went wrong')

@@ -21,7 +21,7 @@ def send_confirmation_mail(recepient_email, plain_text, html_content):
     subscriber.save()
 
 
-def send_letter(pk):
+def send_news_letter(pk):
     news = NewsLetter.objects.get(id=pk)
     subscribers = Subscriber.objects.filter(confirmed=True)
 
