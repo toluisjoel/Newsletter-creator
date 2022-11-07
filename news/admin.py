@@ -9,7 +9,7 @@ class PostAdmin(admin.ModelAdmin):
     # list_per_page = 10
     
 class NewsLetterAdmin(admin.ModelAdmin):
-    list_display = ['title', 'ready']
+    list_display = ['title', 'ready', 'published']
     
 
 admin.site.register(Post, PostAdmin)

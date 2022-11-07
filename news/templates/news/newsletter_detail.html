@@ -3,7 +3,13 @@
 </h1>
 {% for humore in news.posts.all %}
     <h4>{{ forloop.counter }}. {{ humore.title }}</h4>
-    <pre>
+    <p>
         {{ humore.content }}
-    </pre>
+    </p>
 {% endfor %}
+
+{% if news.published == True %}
+    <p>Sent, Published!</p>
+{% else %}
+    <a href="{% url 'news:send_newsletter' news.id %}">Send Newsletter</a>
+{% endif %}

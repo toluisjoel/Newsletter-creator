@@ -28,6 +28,7 @@ class NewsLetter(models.Model):
     title = models.CharField(max_length=225)
     posts = models.ManyToManyField(Post)
     ready = models.BooleanField(default=False)
+    published = models.BooleanField(default=False)
     
     created_at = models.DateTimeField(auto_now_add=True)
     

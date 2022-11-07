@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
 from .models import NewsLetter, Post
 from news.forms import NewsLetterForm, PostForm
+from utility import send_utility
 
 # Post
 class CreatePost(LoginRequiredMixin, generic.CreateView):
@@ -53,3 +55,8 @@ class PreviousNewsLetterList(generic.ListView):
 class NewsLetterDetail(generic.DetailView):
     model = NewsLetter
     context_object_name = 'news'
+
+
+def send_newsletter(request, pk):
+    send_utility.send_news_letter(pk)
+    return HttpResponse('mail sent!')
