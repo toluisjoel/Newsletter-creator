@@ -11,5 +11,8 @@
 {% if news.published == True %}
     <p>Sent, Published!</p>
 {% else %}
-    <a href="{% url 'news:send_newsletter' news.id %}">Send Newsletter</a>
+    <form action="{% url 'news:send_newsletter' news.id %}" method="post">
+        <input type="submit" value="Send newsletter">
+        {% csrf_token %}
+    </form>
 {% endif %}
