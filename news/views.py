@@ -46,11 +46,11 @@ class NewsLetterList(LoginRequiredMixin, generic.ListView):
 
 class PreviousNewsLetterList(generic.ListView):
     model = NewsLetter
-    template_name = 'news/previous_letters.html'
-    context_object_name = 'news'
+    template_name = 'news/previous_newsletters.html'
+    context_object_name = 'previous_news'
 
     def get_queryset(self):
-        return super().get_queryset().filter(ready=True, published=True)
+        return super().get_queryset().filter(published=True)
 
 
 class NewsLetterDetail(generic.DetailView):

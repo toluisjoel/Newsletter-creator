@@ -7,11 +7,12 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from PIL import Image
-from utility.send_utility import send_confirmation_mail
 
 from .forms import SubscribeForm
 from .models import Subscriber, Unsubscriber
 from .tokens import account_activation_token
+from news.models import NewsLetter
+from utility.send_utility import send_confirmation_mail
 
 
 def add_subscriber(request):
@@ -40,7 +41,8 @@ def add_subscriber(request):
             return render(request, 'complete_subscription.html', context)
     else:
         form = SubscribeForm()
-    return render(request, 'index.html', {'form': form})
+        previous_news = NewsLetter.objects.filter(published=True)
+    return render(request, 'index.html', {'form': form, 'previous_news': previous_news})
 
 
 def confirm_subscriber(request, uidb64, token):

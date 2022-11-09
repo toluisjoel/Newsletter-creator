@@ -1,0 +1,12 @@
+<h1>Previous Newsletters</h1>
+
+{% if previous_news %}
+    <div>
+        {% for post in previous_news %}
+            <span>{{ post.created_at.date }}</span>
+            <h4><a href="{% url 'news:letter_detail' post.id %}">{{ post.title }}</a></h4>
+        {% endfor %}
+    </div>
+{% else %}
+    <p><i>You haven't sent any newsletter</i></p>
+{% endif %}
