@@ -1,7 +1,9 @@
-from turtle import title
+from datetime import date
+
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.utils.html import strip_tags
 
 from news.models import NewsLetter, Post
@@ -44,7 +46,9 @@ def send_news_letter(pk):
             fail_silently=False,
         )
         news.published = True
+        news.published_date = timezone.now()
         news.save()
+        print('OK 200 BOY!', news.published_date)
 
         for subscriber in subscribers:
             subscriber = subscriber

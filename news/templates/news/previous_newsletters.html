@@ -3,7 +3,7 @@
 {% if previous_news %}
     <div>
         {% for post in previous_news %}
-            <span>{{ post.created_at.date }}</span>
+            <span>{{ post.published_date.date }}</span>
             <h4><a href="{% url 'news:letter_detail' post.id %}">{{ post.title }}</a></h4>
         {% endfor %}
     </div>

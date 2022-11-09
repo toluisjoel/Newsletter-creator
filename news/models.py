@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -31,6 +31,7 @@ class NewsLetter(models.Model):
     published = models.BooleanField(default=False)
     
     created_at = models.DateTimeField(auto_now_add=True)
+    published_date = models.DateTimeField(default=timezone.now)
     
     class Meta:
         ordering = ('-created_at',)
