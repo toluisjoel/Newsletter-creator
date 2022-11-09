@@ -41,8 +41,8 @@ def add_subscriber(request):
             return render(request, 'complete_subscription.html', context)
     else:
         form = SubscribeForm()
-        previous_news = NewsLetter.objects.filter(published=True)
-    return render(request, 'index.html', {'form': form, 'previous_news': previous_news})
+        previous_newsletters = NewsLetter.objects.filter(published=True)
+    return render(request, 'index.html', {'form': form, 'previous_newsletters': previous_newsletters})
 
 
 def confirm_subscriber(request, uidb64, token):

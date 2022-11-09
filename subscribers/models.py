@@ -6,7 +6,6 @@ class Subscriber(models.Model):
     last_name = models.CharField(blank=True, max_length=25)
     email = models.EmailField(unique=True)
 
-    otp_num = models.CharField(max_length=50)
     confirmed = models.BooleanField(default=False)  # True if subscriber confirms email
     
     delivered_emails = models.IntegerField(default=0)

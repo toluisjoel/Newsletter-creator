@@ -1,3 +1,18 @@
-{% for article in news %}
-    <h4>{{ forloop.counter }}. <a href="{% url 'news:letter_detail' article.id %}">{{ article.title }}</a></h4>
-{% endfor %}
+{% if news %}
+
+    <h1>Published Newsletters</h1>
+    {% for post in news %}
+        {% if post.published %}
+            <h2>😊 <a href="{% url 'news:letter_detail' post.id %}">{{ post.title }}</a></h2>
+        {% endif %}
+    {% endfor %}
+
+    <h1>Draft Newsletters</h1>
+    {% for post in news %}
+        {% if post.published == False %}
+            <h2>🙁 <a href="{% url 'news:letter_detail' post.id %}">{{ post.title }}</a></h2>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p><i>No newsletters yet. <a href="{% url 'news:create_letter' %}">Create News Letter</a></i></p>
+{% endif %}
