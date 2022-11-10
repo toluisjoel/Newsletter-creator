@@ -5,8 +5,8 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.decorators.http import require_POST
 
+from .forms import NewsLetterForm, PostForm
 from .models import NewsLetter, Post
-from news.forms import NewsLetterForm, PostForm
 from utility import send_utility
 
 
@@ -50,7 +50,7 @@ class PreviousNewsLetterList(generic.ListView):
     context_object_name = 'previous_newsletters'
 
     def get_queryset(self):
-        return super().get_queryset().filter(published=True)
+        return super().get_queryset().filter(published=True).order_by('-published_date')
 
 
 class NewsLetterDetail(generic.DetailView):

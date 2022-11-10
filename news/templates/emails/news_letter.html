@@ -4,5 +4,3 @@
     <h4>{{ post.title }}</h4>
     <p>{{ post.content }}</p>
 {% endfor %}
-
-<h2><a href="{{ protocol }}://{{ domain }}{% url 'subscribers:unsubscribe' uidb64=uid token=token %}">Unsubscribe</a></h2>

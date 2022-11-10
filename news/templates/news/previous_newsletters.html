@@ -1,10 +1,14 @@
-<h1>Previous Newsletters</h1>
+<h1 class="pt-5">Previous Newsletters</h1>
 
 {% if previous_newsletters %}
     <div>
         {% for post in previous_newsletters %}
-            <span>{{ post.published_date.date }}</span>
-            <h4><a href="{% url 'news:letter_detail' post.id %}">{{ post.title }}</a></h4>
+            <div class="row py-2 text-align-center">
+                <h4 class="col-6">{{ forloop.counter }}. <a href="{% url 'news:letter_detail' post.id %}"><i>{{ post.title }}</i></a></h4>
+                <p class="col-6">
+                    <span class="text-end">{{ post.published_date.date }}</span>
+                </p>
+            </div>
         {% endfor %}
     </div>
 {% else %}
