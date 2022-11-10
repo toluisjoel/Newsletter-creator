@@ -7,6 +7,7 @@ from django.views.decorators.http import require_POST
 
 from .forms import NewsLetterForm, PostForm
 from .models import NewsLetter, Post
+from subscribers.models import Subscriber, Unsubscriber
 from utility import send_utility
 
 
@@ -31,6 +32,43 @@ class PostDetail(LoginRequiredMixin, generic.DetailView):
 @login_required
 def newsboard(request):
     return render(request, 'news/newsboard.html', {})
+
+@login_required
+def metrics(request):
+    # Subscribers metrics
+    subscribers = Subscriber.objects.filter(confirmed=True)
+    subs_count =  len(subscribers)
+    
+    unsubscribers = Unsubscriber.objects.all()
+    unsubs_count = len(unsubscribers)
+    
+    total_user_count = subs_count + unsubs_count
+    subs_percentage =  round((subs_count / total_user_count) * 100, 2)
+    unsubs_percentage = round((unsubs_count / total_user_count) * 100, 2)
+    
+    # Email metrics
+    delivered_emails = 0
+    opened_emails = 0
+    for subscriber in subscribers:
+        delivered_emails += subscriber.delivered_emails
+        opened_emails += subscriber.opened_emails
+        
+    total_email_count = delivered_emails + opened_emails
+    delivered_percentage =  round((delivered_emails / total_email_count) * 100, 2)
+    opened_percentage = round((opened_emails / total_email_count) * 100, 2)
+    
+    context = {
+        'subscribers_count': subs_count,
+        'subscribers_percentage': subs_percentage,
+        'unsubscribers_percentage': unsubs_percentage,
+        'unsubscribers_count': unsubs_count,
+        'delivered_emails': delivered_emails,
+        'delivered_percentage': delivered_percentage,
+        'opened_emails': opened_emails,
+        'opened_percentage': opened_percentage,
+    }
+    
+    return render(request, 'news/metrics.html', context)
 
 
 class CreateLetter(LoginRequiredMixin, generic.CreateView):

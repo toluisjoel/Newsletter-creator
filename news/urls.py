@@ -6,6 +6,7 @@ app_name = 'news'
 
 urlpatterns = [
     path('', views.newsboard, name='newsboard'),
+    path('metrics/', views.metrics, name='metrics'),
     
     # post
     path('post/', views.PostList.as_view(), name='post_list'),
