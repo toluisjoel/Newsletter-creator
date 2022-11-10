@@ -43,29 +43,28 @@ def metrics(request):
     unsubs_count = len(unsubscribers)
     
     total_user_count = subs_count + unsubs_count
-    subs_percentage =  round((subs_count / total_user_count) * 100, 2)
-    unsubs_percentage = round((unsubs_count / total_user_count) * 100, 2)
+    subscribers_percent =  round((subs_count / total_user_count) * 100, 2)
+    unsubscribers_percent = round((unsubs_count / total_user_count) * 100, 2)
     
     # Email metrics
-    delivered_emails = 0
-    opened_emails = 0
+    unread_emails = 0
+    read_emails = 0
     for subscriber in subscribers:
-        delivered_emails += subscriber.delivered_emails
-        opened_emails += subscriber.opened_emails
+        unread_emails += subscriber.delivered_emails
+        read_emails += subscriber.opened_emails
         
-    total_email_count = delivered_emails + opened_emails
-    delivered_percentage =  round((delivered_emails / total_email_count) * 100, 2)
-    opened_percentage = round((opened_emails / total_email_count) * 100, 2)
+    read_emails_percent = round((read_emails / unread_emails) * 100, 2)
+    unread_emails_percent =  100 - read_emails_percent
     
     context = {
         'subscribers_count': subs_count,
-        'subscribers_percentage': subs_percentage,
-        'unsubscribers_percentage': unsubs_percentage,
+        'subscribers_percent': subscribers_percent,
+        'unsubscribers_percent': unsubscribers_percent,
         'unsubscribers_count': unsubs_count,
-        'delivered_emails': delivered_emails,
-        'delivered_percentage': delivered_percentage,
-        'opened_emails': opened_emails,
-        'opened_percentage': opened_percentage,
+        'unread_emails': unread_emails,
+        'unread_emails_percent': unread_emails_percent,
+        'read_emails': read_emails,
+        'read_emails_percent': read_emails_percent,
     }
     
     return render(request, 'news/metrics.html', context)

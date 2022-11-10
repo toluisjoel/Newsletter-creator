@@ -1,16 +1,18 @@
-<h1 class="pt-5">Previous Newsletters</h1>
+<div class="my-5">
+    <h1>Previous Newsletters</h1>
 
-{% if previous_newsletters %}
-    <div>
-        {% for post in previous_newsletters %}
-            <div class="row py-2 text-align-center">
-                <h4 class="col-6">{{ forloop.counter }}. <a href="{% url 'news:letter_detail' post.id %}"><i>{{ post.title }}</i></a></h4>
-                <p class="col-6">
-                    <span class="text-end">{{ post.published_date.date }}</span>
-                </p>
-            </div>
-        {% endfor %}
-    </div>
-{% else %}
-    <p><i>Newsletters haven't been sent</i></p>
-{% endif %}
+    {% if previous_newsletters %}
+        <div>
+            {% for post in previous_newsletters %}
+                <div class="row py-2 text-align-center">
+                    <h4 class="col-6">{{ forloop.counter }}. <a href="{% url 'news:letter_detail' post.id %}"><i>{{ post.title }}</i></a></h4>
+                    <p class="col-6">
+                        <span class="text-end">{{ post.published_date.date }}</span>
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p><i>Newsletters haven't been sent</i></p>
+    {% endif %}
+</div>

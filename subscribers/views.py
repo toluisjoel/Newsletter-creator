@@ -41,7 +41,7 @@ def add_subscriber(request):
             return render(request, 'complete_subscription.html', context)
     else:
         form = SubscribeForm()
-        previous_newsletters = NewsLetter.objects.filter(published=True).order_by('-published_date')
+    previous_newsletters = NewsLetter.objects.filter(published=True).order_by('-published_date')
     return render(request, 'index.html', {'form': form, 'previous_newsletters': previous_newsletters})
 
 
