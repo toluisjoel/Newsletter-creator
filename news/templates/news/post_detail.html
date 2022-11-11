@@ -1,4 +1,8 @@
-<h4>{{ post.title }}</h4>
-<pre>
-    {{ post.content }}
-</pre>
+{% extends 'index.html' %}
+
+{% block content %}
+    <h4>{{ post.title }}</h4>
+    <pre>
+        {{ post.content }}
+    </pre>
+{% endblock %}

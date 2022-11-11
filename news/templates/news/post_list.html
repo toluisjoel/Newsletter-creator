@@ -1,7 +1,11 @@
-{% if posts %}
-    {% for post in posts %}
-        <h4>{{ forloop.counter }}. <a href="{% url 'news:post_detail' post.id %}">{{ post.title }}</a></h4>
-    {% endfor %}
-{% else %}
-    <p><i>No posts yet. <a href="{% url 'news:create_post' %}">Create Post</a></i></p>
-{% endif %}
+{% extends 'index.html' %}
+
+{% block content %}
+    {% if posts %}
+        {% for post in posts %}
+            <h4>{{ forloop.counter }}. <a href="{% url 'news:post_detail' post.id %}">{{ post.title }}</a></h4>
+        {% endfor %}
+    {% else %}
+        <p><i>No posts yet. <a href="{% url 'news:create_post' %}">Create Post</a></i></p>
+    {% endif %}
+{% endblock %}

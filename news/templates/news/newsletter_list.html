@@ -1,18 +1,22 @@
-{% if news %}
+{% extends 'index.html' %}
 
-    <h1>Published Newsletters</h1>
-    {% for post in news %}
-        {% if post.published %}
-            <h2>😊 <a href="{% url 'news:letter_detail' post.id %}">{{ post.title }}</a></h2>
-        {% endif %}
-    {% endfor %}
+{% block content %}
+    {% if news %}
 
-    <h1>Draft Newsletters</h1>
-    {% for post in news %}
-        {% if post.published == False %}
-            <h2>🙁 <a href="{% url 'news:letter_detail' post.id %}">{{ post.title }}</a></h2>
-        {% endif %}
-    {% endfor %}
-{% else %}
-    <p><i>No newsletters yet. <a href="{% url 'news:create_letter' %}">Create News Letter</a></i></p>
-{% endif %}
+        <h1 class="display-4 my-4">Published Newsletters</h1>
+        {% for post in news %}
+            {% if post.published %}
+                <h2 class="my-5">😊 <a href="{% url 'news:letter_detail' post.id %}">{{ post.title }}</a></h2>
+            {% endif %}
+        {% endfor %}
+
+        <h1 class="display-4 my-4">Draft Newsletters</h1>
+        {% for post in news %}
+            {% if post.published == False %}
+                <h2 class="my-5">🙁 <a href="{% url 'news:letter_detail' post.id %}">{{ post.title }}</a></h2>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p><i>No newsletters yet. <a href="{% url 'news:create_letter' %}">Create News Letter</a></i></p>
+    {% endif %}
+{% endblock %}

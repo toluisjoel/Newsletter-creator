@@ -1,12 +1,16 @@
-<p><i>Subsribers:</i> <b>{{ subscribers_count }}</b></p>
-<p><i>% Subsribers:</i> <b>{{ subscribers_percent }}%</b></p>
+{% extends 'index.html' %}
 
-<p><i>Unsubscribers:</i> <b>{{ unsubscribers_count }}</b></p>
-<p><i>% Unsubscribers:</i> <b>{{ unsubscribers_percent }}%</b></p> 
-<br>
+{% block content %}
+    <p><i>Subsribers:</i> <b>{{ subscribers_count }}</b></p>
+    <p><i>% Subsribers:</i> <b>{{ subscribers_percent }}%</b></p>
 
-<p><i>Unread mails</i>: <b>{{ unread_emails }}</b></p>
-<p><i>% Unread mails</i>: <b>{{ unread_emails_percent }}%</b></p>
+    <p><i>Unsubscribers:</i> <b>{{ unsubscribers_count }}</b></p>
+    <p><i>% Unsubscribers:</i> <b>{{ unsubscribers_percent }}%</b></p> 
+    <br>
 
-<p><i>Read mails</i>: <b>{{ read_emails }}</b></p>
-<p><i>% Read mails</i>: <b>{{ read_emails_percent }}%</b></p>
+    <p><i>Unread mails</i>: <b>{{ unread_emails }}</b></p>
+    <p><i>% Unread mails</i>: <b>{{ unread_emails_percent }}%</b></p>
+
+    <p><i>Read mails</i>: <b>{{ read_emails }}</b></p>
+    <p><i>% Read mails</i>: <b>{{ read_emails_percent }}%</b></p>
+{% endblock%}

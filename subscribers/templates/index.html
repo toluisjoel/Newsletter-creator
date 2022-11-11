@@ -11,40 +11,17 @@
     <header>
         <nav class="navbar navbar-dark bg-dark navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
+                <a class="text-white" href="{% url 'subscribers:add' %}">Home</a>
                 <a class="text-white" href="{% url 'news:newsboard' %}">News Board</a>
             </div>
         </nav>
     </header>
 
     <div class="container-lg">
-        <h1 class="display-3 my-5">{% block heading %}{% endblock %}</h1>
         {% block content %}
         {% endblock %}
-
-        <!-- SUBSCRIPTION FORM -->
-        {% if form %}
-            <div class="d-flex justify-content-center">
-                <form class="col-lg-12 col-md-6 col-sm-12 my-5" method="post">
-                    {% csrf_token %}
-                    <h1 class="display-4 mb-5">The Humore</h1>
-                    <div>
-                        {{form.as_p}}
-                    </div>
-                    <button class="btn btn-success" type="submit">Subscribe!</button>
-                </form>
-            </div>
-            <!-- previous newsletters list -->
-            {% include 'news/previous_newsletters.html' %}
-        {% endif %}
-
-        <!-- SUBSCRIPTION CONFIRMED -->
-        {% if action == 'confirmed' %}
-            <p>Thanks a bunch {{ subscriber.first_name }} 🥹</p>
-            <p>You just made our little family grow a little bigger</p>
-            <a href=""><button>See previous emails sent</button></a>
-        {% endif %}
     </div>
-        
+
 </body>
 
 </html>

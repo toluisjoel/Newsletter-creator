@@ -8,7 +8,8 @@ class NewsLetterForm(forms.ModelForm):
         model = NewsLetter
         fields = ('title', 'posts', 'ready')
         widgets = {
-            'posts': forms.CheckboxSelectMultiple
+            'title': forms.TextInput(attrs={'class': 'form-control w-50'}),
+            'posts': forms.CheckboxSelectMultiple(attrs={'class': 'form-control w-50'}),
         }
     posts = forms.ModelMultipleChoiceField(
         queryset=Post.objects.filter(validated=True, status='draft'),
@@ -19,3 +20,9 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'content', 'source', 'image')
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control w-50'}),
+            'content': forms.Textarea(attrs={'class': 'form-control w-50'}),
+            'source': forms.TextInput(attrs={'class': 'form-control w-50'}),
+            'image': forms.TextInput(attrs={'class': 'form-control w-50', 'placeholder': 'Image url (optional)'}),
+        }

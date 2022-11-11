@@ -17,6 +17,6 @@ urlpatterns = [
     path('news-letter/', views.NewsLetterList.as_view(), name='letter_list'),
     path('news-letter/create/', views.CreateLetter.as_view(), name='create_letter'),
     path('news-letter/<int:pk>/', views.NewsLetterDetail.as_view(), name='letter_detail'),
-    path('previous-news/', views.PreviousNewsLetterList.as_view(), name='previous_news_list'),
+    path('news-letter/previous/', views.PreviousNewsLetterList.as_view(), name='previous_newsletters'),
     path('send_newsletter/<int:pk>/', views.send_newsletter, name='send_newsletter'),
 ]

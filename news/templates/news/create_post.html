@@ -1,5 +1,10 @@
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Add">
-</form>
+{% extends 'index.html' %}
+
+{% block content %}
+    <form action="" method="post">
+        <h1 class="display-4 my-5">Create Post</h1>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-success" type="submit">Add post!</button>
+    </form>
+{% endblock %}

@@ -9,7 +9,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from PIL import Image
 
 from .forms import SubscribeForm, UnsubscribeForm
-from .models import Subscriber, Unsubscriber
+from .models import Subscriber
 from .tokens import account_activation_token
 from news.models import NewsLetter
 from utility.send_utility import send_confirmation_mail
@@ -38,11 +38,16 @@ def add_subscriber(request):
             context = {
                 'subscriber': subscriber,
             }
-            return render(request, 'complete_subscription.html', context)
+            return render(request, 'subscribers/subscription_complete.html', context)
     else:
         form = SubscribeForm()
     previous_newsletters = NewsLetter.objects.filter(published=True).order_by('-published_date')
-    return render(request, 'index.html', {'form': form, 'previous_newsletters': previous_newsletters})
+    
+    context = {
+        'form': form,
+        'previous_newsletters': previous_newsletters,
+    }
+    return render(request, 'subscribers/add_subscriber.html', context)
 
 
 def confirm_subscriber(request, uidb64, token):
@@ -58,23 +63,30 @@ def confirm_subscriber(request, uidb64, token):
     else:
         return HttpResponse('Something went wrong, please try again')
 
-    return render(request, 'index.html', {'action': 'confirmed'})
+    return render(request, 'subscribers/subscription_complete.html', {'subscriber': subscriber})
 
 
 def unsubscribe(request):
     if request.method == 'POST':
         form = UnsubscribeForm(request.POST)
         if form.is_valid():
-            unsucriber = form.save(commit=False)
-            subscriber = Subscriber.objects.get(email=unsucriber.email)
-            unsucriber.first_name = subscriber.first_name
-            unsucriber.last_name = subscriber.last_name
-            unsucriber.save()
+            unsubcriber = form.save(commit=False)
+            subscriber = Subscriber.objects.get(email=unsubcriber.email)
+            unsubcriber.first_name = subscriber.first_name
+            unsubcriber.last_name = subscriber.last_name
+            unsubcriber.delivered_emails = subscriber.delivered_emails
+            unsubcriber.opened_emails = subscriber.opened_emails
+            unsubcriber.save()
             subscriber.delete()
+            
+            context = {'unsubcriber': unsubcriber}
+            return render(request, 'subscribers/unsubscribe_complete.html', context)
     else:
         form = UnsubscribeForm()
 
-    return render(request, 'subscribers/unsubscribe.html', {'form': form})
+    context = {'form': form}
+
+    return render(request, 'subscribers/unsubscribe.html', context)
 
 
 # For tracking if user opens email

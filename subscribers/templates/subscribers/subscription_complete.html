@@ -1,22 +1,7 @@
 {% extends 'index.html' %}
 
-{% block title %} complete subscription {% endblock %}
-
-{% block heading %} Thanks! we'll add you to the newsletter. {% endblock %}
 {% block content %}
-    <p>
-        A link has been sent to your email to confirm your subscription
-    </p>
-
-    <h3 class="display-5 my-3">What to expect from the newsletter</h3>
-    <p>
-        We send out letters  everyweek throught email
-        about *subject*
-    </p>
-
-    <h3 class="display-5 my-3">Get helpful reminders</h3>
-    <p>
-        If you would find it helpful to receive reminders for our newsletters... then follow us on Twitter
-    </p>
-    <span> <a href="">Follow us on twitter</a></span>
+    <p>Thanks a bunch {{ subscriber.first_name }} 🥹</p>
+    <p>You just made our little family grow a little bigger</p>
+    <a href=""><button>See previous emails sent</button></a>
 {% endblock %}
