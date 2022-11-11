@@ -8,7 +8,7 @@ from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from PIL import Image
 
-from .forms import SubscribeForm
+from .forms import SubscribeForm, UnsubscribeForm
 from .models import Subscriber, Unsubscriber
 from .tokens import account_activation_token
 from news.models import NewsLetter
@@ -61,26 +61,20 @@ def confirm_subscriber(request, uidb64, token):
     return render(request, 'index.html', {'action': 'confirmed'})
 
 
-def unsubscribe(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        subscriber = Subscriber.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, Subscriber.DoesNotExist):
-        subscriber = None
-
-    if subscriber is not None and account_activation_token.check_token(subscriber, token):
-        Unsubscriber.objects.create(
-            first_name=subscriber.first_name,
-            last_name=subscriber.last_name,
-            email=subscriber.email,
-            delivered_emails=subscriber.delivered_emails,
-            opened_emails=subscriber.opened_emails,
-        )
-        subscriber.delete()
+def unsubscribe(request):
+    if request.method == 'POST':
+        form = UnsubscribeForm(request.POST)
+        if form.is_valid():
+            unsucriber = form.save(commit=False)
+            subscriber = Subscriber.objects.get(email=unsucriber.email)
+            unsucriber.first_name = subscriber.first_name
+            unsucriber.last_name = subscriber.last_name
+            unsucriber.save()
+            subscriber.delete()
     else:
-        return HttpResponse('Could not unsubscribe you from the list')
+        form = UnsubscribeForm()
 
-    return render(request, 'index.html', {'action': 'confirmed'})
+    return render(request, 'subscribers/unsubscribe.html', {'form': form})
 
 
 # For tracking if user opens email
