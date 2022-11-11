@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.html import strip_tags
 
 from news.models import NewsLetter, Post
-from subscribers.models import Subscriber
+from subscribers.models import Subscriber, Unsubscriber
 
 
 def send_confirmation_mail(recepient_email, plain_text, html_content):
@@ -48,7 +48,6 @@ def send_news_letter(pk):
         news.published = True
         news.published_date = timezone.now()
         news.save()
-        print('OK 200 BOY!', news.published_date)
 
         for subscriber in subscribers:
             subscriber = subscriber
@@ -62,3 +61,19 @@ def send_news_letter(pk):
 
     except:
         pass
+
+
+def send_re_engagement_mail():
+    unsubscribers = Unsubscriber.objects.filter(created_at='now')
+    
+    html_content = render_to_string('emails/re_engagement.html', {})
+    plain_text_content = strip_tags(html_content)
+    
+    send_mail(
+        'Re-engagement Mail',
+        plain_text_content,
+        settings.DEFAULT_FROM_EMAIL,
+        [unsubscriber.email for unsubscriber in unsubscribers],
+        html_message=html_content,
+        fail_silently=False,
+    )
